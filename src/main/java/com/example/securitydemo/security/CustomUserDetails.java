@@ -1,12 +1,13 @@
 package com.example.securitydemo.security;
 
 import com.example.securitydemo.entity.User;
-import java.util.Collection;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
@@ -46,6 +47,11 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // 해당 UserDetails가 어떤 User인지 알기 위함.
+    public User getUser() {
+        return user;
     }
 
 }
