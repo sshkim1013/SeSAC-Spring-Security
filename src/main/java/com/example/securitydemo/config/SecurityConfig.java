@@ -18,15 +18,19 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/info", "/login").permitAll()  // '/' 경로와 '/info' 경로는 모두 허용하고
-                    .anyRequest().authenticated())  // 나머지는 모두 로그인 필요
+                    .requestMatchers("/", "/info", "/login").permitAll()  // 해당 경로는 로그인 없어도 모두 허용하고
+                    .requestMatchers("/admin/**").hasRole("ADMIN")  // ADMIN 권한을 가진 사용자만 접근 가능
+                    .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")  // USER, ADMIN 권한을 가진 사용자가 접근 가능
+                    .anyRequest().authenticated())  // 나머지 모두는 로그인 필요
             .formLogin(form -> form.loginPage("/login")
                                     // 로그인에 성공하면 항상 dashboard로 이동
                                    .defaultSuccessUrl("/dashboard", true)
                                    .failureUrl("/login")    // 로그인에 실패 -> 로그인 페이지로 이동
                                    .permitAll())
             .logout(logout -> logout.logoutSuccessUrl("/login")
-                                    .permitAll());   // 로그아웃에 성공 -> 로그인 페이지로 이동
+                                    .permitAll())   // 로그아웃에 성공 -> 로그인 페이지로 이동
+            .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied")
+            );
 
         return httpSecurity.build();
     }
