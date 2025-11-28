@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
   <meta charset="UTF-8">
   <title>Home</title>
@@ -8,5 +11,18 @@
     <h1>HOME</h1>
     <p>Welcome</p>
     <a href="/info">Info</a>
+
+    <div sec:authorize="!isAuthenticated()">
+        <p>로그인 하지 않음</p>
+        <a href="/login">login</a>
+    </div>
+
+    <div sec:authorize="isAuthenticated()">
+      <p>로그인 했음</p>
+      <p sec:authentication="name"></p>
+      <p sec:authentication="authorities"></p>
+    </div>
+
+    <a href="/dashboard">dashboard</a>
 </body>
 </html>
