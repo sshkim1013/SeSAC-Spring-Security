@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,7 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/info", "/login").permitAll()  // 해당 경로는 로그인 없어도 모두 허용하고
+                    .requestMatchers("/", "/info", "/login", "/h2-console/**").permitAll()  // 해당 경로는 로그인 없어도 모두 허용하고
                     .requestMatchers("/admin/**").hasRole("ADMIN")  // ADMIN 권한을 가진 사용자만 접근 가능
                     .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")  // USER, ADMIN 권한을 가진 사용자가 접근 가능
                     .anyRequest().authenticated())  // 나머지 모두는 로그인 필요
@@ -32,9 +34,18 @@ public class SecurityConfig {
             .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied")
             );
 
+        httpSecurity.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
+        httpSecurity.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+
         return httpSecurity.build();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /*
     @Bean
     public UserDetailsService userDetailService() {
 
@@ -53,4 +64,6 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(user, admin);
     }
+    */
+
 }
