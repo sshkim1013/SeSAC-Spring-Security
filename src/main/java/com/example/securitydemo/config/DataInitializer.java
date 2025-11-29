@@ -22,6 +22,12 @@ public class DataInitializer implements CommandLineRunner {
                 .role("ROLE_USER")
                 .build();
 
+        User user2 = User.builder()
+            .username("user2")
+            .password(passwordEncoder.encode("1234"))   // 비밀번호 암호화(평문 저장 X)
+            .role("ROLE_USER")
+            .build();
+
         User admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
@@ -29,10 +35,10 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         userRepository.save(user);
+        userRepository.save(user2);
         userRepository.save(admin);
 
         System.out.println("User 데이터 생성 완료");
     }
-
 
 }
