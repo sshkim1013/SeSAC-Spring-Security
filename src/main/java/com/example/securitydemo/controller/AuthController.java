@@ -45,14 +45,39 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signup(
-        // SignupDto 클래스에 있는 검증 사항(@NotBlank, ...)들을 검증하는 목적
+        // SignupDto 클래스에 있는 검증 사항(@NotBlank, ...)들을 검증하는 목적.
         @Valid @ModelAttribute SignupDto signupDto,
+        // signupDto의 검증 결과를 가지고 있는 객체.
         BindingResult bindingResult
     ) {
-        // 유효성 검사에서 실패하면 signup.html로 이동
+        if (!signupDto.getPassword().equals(signupDto.getPasswordConfirm())) {
+            // signup.html의 26번째 줄 코드와 같은 변수명(passwordConfirm)이어야 한다.
+            bindingResult.rejectValue("passwordConfirm", "mismatch", "비밀번호가 일치하지 않습니다.");
+        }
+
+        // 유효성 검사에서 실패(검증 실패)하면 signup.html로 이동
         if (bindingResult.hasErrors()) {
             return "signup";
         }
+
+        // DB 조회가 필요한 검증
+        // 아이디 중복 체크
+        if (userService.existByUsername(signupDto.getUsername())) {
+            // signup.html의 16번째 줄 코드와 같은 변수명(username)이어야 한다.
+            bindingResult.rejectValue("username", "duplicate", "이미 사용 중인 아이디입니다.");
+            return "signup";
+        }
+
+        // 이메일 중복 체크
+        if (userService.existByEmail(signupDto.getEmail())) {
+            // signup.html의 31번째 줄 코드와 같은 변수명(email)이어야 한다.
+            bindingResult.rejectValue("email", "duplicate", "이미 사용 중인 이메일입니다.");
+            return "signup";
+        }
+
+        // 검증 성공 => 회원가입 처리
+        userService.register(signupDto);
+
         return "redirect:/login";
     }
 

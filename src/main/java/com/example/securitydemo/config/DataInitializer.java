@@ -20,18 +20,21 @@ public class DataInitializer implements CommandLineRunner {
                 .username("user")
                 .password(passwordEncoder.encode("1234"))   // 비밀번호 암호화(평문 저장 X)
                 .role("ROLE_USER")
+                .email("user1@test.com")
                 .build();
 
         User user2 = User.builder()
             .username("user2")
             .password(passwordEncoder.encode("1234"))   // 비밀번호 암호화(평문 저장 X)
             .role("ROLE_USER")
+            .email("user2@test.com")
             .build();
 
         User admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
                 .role("ROLE_ADMIN")
+                .email("admin1@test.com")
                 .build();
 
         userRepository.save(user);

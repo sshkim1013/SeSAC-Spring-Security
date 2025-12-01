@@ -17,17 +17,17 @@
       </div>
       <div>
           <label for="password">password : </label>
-          <input type="text" th:field="*{password}" id="password">
+          <input type="password" th:field="*{password}" id="password">
           <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
       </div>
       <div>
           <label for="passwordConfirm">passwordConfirm : </label>
-          <input type="text" th:field="*{passwordConfirm}" id="passwordConfirm">
+          <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm">
           <p th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></p>
       </div>
       <div>
           <label for="email">email : </label>
-          <input type="text" th:field="*{email}" id="email">
+          <input type="email" th:field="*{email}" id="email">
           <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
       </div>
 
