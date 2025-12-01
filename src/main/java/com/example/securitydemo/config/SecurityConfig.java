@@ -20,7 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/info", "/login", "/h2-console/**").permitAll()  // 해당 경로는 로그인 없어도 모두 허용하고
+                    .requestMatchers("/", "/info", "/login", "/h2-console/**", "/signup").permitAll()  // 해당 경로는 로그인 없어도 모두 허용하고
                     .requestMatchers("/admin/**").hasRole("ADMIN")  // ADMIN 권한을 가진 사용자만 접근 가능
                     .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")  // USER, ADMIN 권한을 가진 사용자가 접근 가능
                     .anyRequest().authenticated())  // 나머지 모두는 로그인 필요
